@@ -1,2 +1,0 @@
-"    $./a.out cat_grep.c printf outputfile\n"
-		fprintf(stderr, "%s", usage );
