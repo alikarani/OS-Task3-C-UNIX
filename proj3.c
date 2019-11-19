@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     if (fd == -1)
     {
-        printf("Failed");
+        printf("Failure");
         exit(1);
     }
     int save_stdout = dup(1);
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     }
     fflush(stdout);
     dup2(save_stdout, 1); //also use (STDOUT_FILENO) for output like we use 1 for output bcz sometimes 1 is not use for output
-    printf("Output Successfull\n");
+    printf("Output Success\n");
     close(fd);
     return 0;
 }
