@@ -16,15 +16,30 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    printf("It created a child process with fork!\n");
-     pid_t cpid;
-     if (fork() == 0)
-         exit(0); /* terminate child */
+ pid_t pid;
+    pid = fork();
+    if (pid < 0)
+    {
+        fprintf(stderr, "fork failed");
+        return 1;
+    }
+    else if (pid == 0)
+    {
+        char *cmd = "ls";
+        char *argv[3];
+        argv[0] = "ls";
+        argv[1] = "-la";
+        argv[2] = NULL;
 
-     else
-        cpid = wait(NULL); /* reaping parent */
-     printf("Parent pid = %d\n", getpid());
-     printf("Child pid = %d\n", cpid);
+        //uncomment 1 at a time.
+        // execlp("/bin/ls", cmd, NULL);  //This will run "ls"
+        // execvp(cmd, argv); //This will run "ls -la"
+    }
+    else
+    {
+        wait(NULL);
+        printf("child complete\n");
+    }
 
 
 
