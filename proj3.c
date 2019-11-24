@@ -5,13 +5,16 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/wait.h>
 
-static void pSigHandler(int signo){
-    switch (signo) {
-            case SIGTSTP:
-            printf("TSTP");
-            fflush(stdout);
-            break;
+static void pSigHandler(int signo)
+{
+    switch (signo)
+    {
+    case SIGTSTP:
+        printf("TSTP");
+        fflush(stdout);
+        break;
     }
 }
 
@@ -22,7 +25,6 @@ int main(int argc, char *argv[])
     // psa.sa_handler = pSigHandler;
     // sigaction(SIGTSTP, &psa, NULL);
     // for(;;) {}
-
 
     char *filename = "copyfile.txt";
 
@@ -67,6 +69,49 @@ int main(int argc, char *argv[])
     {
         wait(NULL);
         printf("child complete\n");
+    }
+
+    int pipe_1[2];
+    int pipe_2[2];
+    int return1;
+    int return2;
+
+    char w_msg1[30] = "This Is Pipe1 Msg";
+    char w_msg2[30] = "This Is Pipe2 Msg";
+    char r_msg[30];
+
+    return1 = pipe(pipe_1);
+    if (return1 == -1)
+    {
+        printf("Unable to create pipe 1\n");
+    }
+
+    return2 = pipe(pipe_2);
+    if (return2 == -1)
+    {
+        printf("Unable to create pipe 2\n");
+    }
+
+    int pid1 = fork();
+
+    if (pid1 != 0) 
+    {
+        close(pipe_1[0]); 
+        close(pipe_2[1]); 
+        printf("Write on parent process Pipe 1:%s\n", w_msg1);
+        write(pipe_1[1], w_msg1, sizeof(w_msg1)); 
+        read(pipe_2[0], r_msg, sizeof(r_msg));    
+        printf("Read from  parent process Pipe 2:%s\n", r_msg);
+    }
+
+    else
+    {
+        close(pipe_1[1]);                      
+        close(pipe_2[0]);                      
+        read(pipe_1[0], r_msg, sizeof(r_msg)); 
+        printf("Read from child process Pipe 1:%s\n", r_msg);
+        printf("Write on child process Pipe 2:%s\n", w_msg2);
+        write(pipe_2[1], w_msg2, sizeof(w_msg2)); 
     }
 
     int save_stdout = dup(1);
