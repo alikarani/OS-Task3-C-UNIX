@@ -132,4 +132,7 @@ int main(int argc, char *argv[])
 }
 //METHODS NOT USED
 //open() As the functionality of open and creat was similar so Ali has used Creat.
-//
+//Group Members:
+// Mohsin Ali Al Hussaini 9031 (Group Lead)
+// Tanveer Khan 9022
+// Ali Asghar Karani 8999
