@@ -15,6 +15,19 @@ int main(int argc, char *argv[])
         printf("Failure");
         exit(1);
     }
+
+    printf("It created a child process with fork!\n");
+     pid_t cpid;
+     if (fork() == 0)
+         exit(0); /* terminate child */
+
+     else
+        cpid = wait(NULL); /* reaping parent */
+     printf("Parent pid = %d\n", getpid());
+     printf("Child pid = %d\n", cpid);
+
+
+
     int save_stdout = dup(1);
     dup2(fd, STDOUT_FILENO);
     for (int i = 1; i < argc; i++)
@@ -22,7 +35,7 @@ int main(int argc, char *argv[])
         printf("%s", argv[i]);
     }
     fflush(stdout);
-    dup2(save_stdout, 1); //also use (STDOUT_FILENO) for output like we use 1 for output bcz sometimes 1 is not use for output
+    dup2(save_stdout, 1);
     printf("Output Success\n");
     close(fd);
     return 0;
